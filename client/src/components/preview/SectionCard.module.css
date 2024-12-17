@@ -1,0 +1,65 @@
+
+.previewBlock {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px
+}
+.sectionCard {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* Высота карточки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    
+  }
+  
+  .sectionCard:hover {
+    transform: scale(1.01);
+  }
+
+  .cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Масштабируем изображение, чтобы заполнить элемент */
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Затемнение */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+  }
+  
+  .title {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  
+  /* Адаптивность */
+  @media (max-width: 768px) {
+    .previewBlock {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3px
+    }
+    .sectionCard {
+      height: 100vh;
+    }
+  
+    .title {
+      font-size: 14px;
+    }
+  }
+  
