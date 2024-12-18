@@ -1,4 +1,4 @@
-import { ITracks } from "../interfaces/tracksInterfaces";
+import { ICreateTrack, ITrackDetails, ITracks } from "../interfaces/tracksInterfaces";
 import api from "./api";
 
 export const getTracksQuery = async (): Promise<ITracks[]> => {
@@ -8,5 +8,25 @@ export const getTracksQuery = async (): Promise<ITracks[]> => {
   } catch (err) {
     console.error("Ошибка при выполнении запроса:", err);
     throw err; // Передаем ошибку дальше, чтобы её можно было обработать в вызывающем коде
+  }
+};
+
+export const getTracksDetailQuery = async (track_id: string): Promise<ITrackDetails> => {
+  try {
+    const response = await api.get<ITrackDetails>(`/track/${track_id}`);
+    return response.data;
+  } catch (err) {
+    console.error("Ошибка при выполнении запроса:", err);
+    throw err; // Передаем ошибку дальше, чтобы её можно было обработать в вызывающем коде
+  }
+};
+
+export const createTrack = async (trackData:ICreateTrack) => {
+  try {
+    const response = await api.post("/track/create", trackData);
+    return response.data;
+  } catch (err) {
+    console.error("Ошибка при добавлении трека", err);
+    throw err;
   }
 };

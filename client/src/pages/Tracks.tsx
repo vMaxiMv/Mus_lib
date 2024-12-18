@@ -19,12 +19,9 @@ const Tracks = () => {
     useEffect(() => {
         getTracks();
     }, []);
-console.log('tracks', tracks);
-
     return (
         <div>
             <TracksList tracks={tracks}/>
-            
         </div>
     )
 }

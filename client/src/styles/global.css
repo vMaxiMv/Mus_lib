@@ -1,0 +1,13 @@
+.full-width-header {
+    width: 100vw; /* Ширина на всю ширину окна */
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    background-color: #f0f2f5; /* Цвет фона */
+    color: #000000; /* Цвет текста */
+    padding: 0 20px; /* Отступы */
+    border-bottom: 1px solid #e8e8e8; /* Граница снизу */
+    align-items: center;
+  }
