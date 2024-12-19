@@ -30,3 +30,14 @@ export const createTrack = async (trackData:ICreateTrack) => {
     throw err;
   }
 };
+
+
+export const deleteTrack = async (id:string) => {
+  try {
+    const response = await api.delete(`/track/${id}`);
+    return response.data;
+  } catch (err) {
+    console.error("Ошибка при удалении трека", err);
+    throw err;
+  }
+};

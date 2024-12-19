@@ -29,7 +29,11 @@ export const CreatePlantForm: React.FC<CreatePlantFormProps> = ({ visible, setVi
             open={visible}
             title="Добавить новый трек"
             okText="Добавить"
+            okButtonProps={{
+                style: { backgroundColor: "black", color: "#fff", borderRadius: "8px" },
+              }}
             onCancel={() => setVisible(false)}
+            cancelText="Отмена" 
             onOk={handleCreate}
         >
             <TrackForm form={form} />

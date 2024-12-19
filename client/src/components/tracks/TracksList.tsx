@@ -14,9 +14,10 @@ interface Track {
 
 interface TracksListProps {
   tracks: Track[];
+  getTracks: () => void
 }
 
-const TracksList: React.FC<TracksListProps> = ({ tracks }) => {
+const TracksList: React.FC<TracksListProps> = ({ tracks, getTracks }) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   
@@ -27,6 +28,7 @@ const TracksList: React.FC<TracksListProps> = ({ tracks }) => {
 
   const onCreate = () => {
     setVisible(false);
+    getTracks()
 };
 
   return (

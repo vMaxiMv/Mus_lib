@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     align-items: flex-start; 
-
     padding: 0;
     height: 100vh; 
     margin-top: 20px; 
@@ -18,6 +17,7 @@
     text-align: center;
     color: #333;
     margin-top: 40px; 
+    position: relative;
 }
 
 
@@ -57,4 +57,22 @@
     padding: 5px 10px;
     margin: 5px;
     font-size: 14px;
+}
+
+
+
+.closeButton {
+    position: absolute; 
+    top: 5%; 
+    right: 5%; 
+    background: none;
+    border: none;
+    color: #ff4d4f;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.closeButton:hover {
+    color: #d32f2f;
 }

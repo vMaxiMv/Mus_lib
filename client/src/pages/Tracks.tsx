@@ -13,7 +13,7 @@ const Tracks = () => {
             const data = await getTracksQuery()
             setTracks(data)
         } catch (error) {
-            console.error("Ошибка при получении данных о растениях:", error);
+            console.error("Ошибка при получении данных о треках:", error);
         }
     }
     useEffect(() => {
@@ -21,7 +21,7 @@ const Tracks = () => {
     }, []);
     return (
         <div>
-            <TracksList tracks={tracks}/>
+            <TracksList tracks={tracks} getTracks={getTracks}/>
         </div>
     )
 }

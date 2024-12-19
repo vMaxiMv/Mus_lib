@@ -1,8 +1,9 @@
 // PlantForm.js
 import React, { useEffect, useState } from "react";
 import { Form, FormInstance, Input, Select } from "antd";
-import { IMusician } from "../../interfaces/tracksInterfaces";
+import { IGenre, IMusician } from "../../interfaces/tracksInterfaces";
 import { getMusiciansQuery } from "../../api/musicianApi";
+import { getGenresQuery } from "../../api/genresApi";
 
 interface TrackFormProps {
     form: FormInstance; // Указываем тип для form
@@ -10,6 +11,8 @@ interface TrackFormProps {
 
 const TrackForm: React.FC<TrackFormProps>  = ({ form }) => {
     const [musicians, setMusicians] = useState<IMusician[]>([]);
+    const [genres, setGenres] = useState<IGenre[]>([]);
+
     useEffect(()=>{
         const musiciansList = async () => {
             try {
@@ -20,18 +23,33 @@ const TrackForm: React.FC<TrackFormProps>  = ({ form }) => {
                 console.error("Ошибка при получении музыканта:", error);
             }
         }
+
+        const genreList = async () => {
+            try {
+                const data = await getGenresQuery()
+                setGenres(data);
+            }
+            catch (error) {
+                console.error("Ошибка при получении музыканта:", error);
+            }
+        }
+
         musiciansList()
+        genreList()
     }, [])
 
     const handleMusicianSelect = (value:string) => {
         console.log("Выбран музыкант с id:", value);
-
-      };
+    };
+      
+    const handleGenresSelect = (values: string[]) => {
+        console.log("Выбраны жанры с id:", values);
+    };
     return (
         <Form form={form} layout="vertical">
             <Form.Item
                 label="Название трека"
-                name="track_name"
+                name="title"
                 rules={[{ required: true, message: "Введите название трека!" }]}
             >
                 <Input />
@@ -45,7 +63,7 @@ const TrackForm: React.FC<TrackFormProps>  = ({ form }) => {
             </Form.Item>
             <Form.Item
                 label="Музыкант"
-                name="musician"
+                name="musician_id"
                 rules={[{ required: true, message: 'Выберите музыканта!' }]}
             >
              <Select placeholder="Выберите музыканта" onChange={handleMusicianSelect}>
@@ -56,6 +74,23 @@ const TrackForm: React.FC<TrackFormProps>  = ({ form }) => {
                 ))}
         </Select>
       </Form.Item>
+      <Form.Item
+                label="Жанры"
+                name="genre_ids"
+                rules={[{ required: true, message: "Выберите хотя бы один жанр!" }]}
+            >
+                <Select
+                    mode="multiple" // Режим множественного выбора
+                    placeholder="Выберите жанры"
+                    onChange={handleGenresSelect}
+                >
+                    {genres.map((genre) => (
+                        <Select.Option key={genre.genre_id} value={genre.genre_id}>
+                            {genre.genre_name}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
         </Form>
     );
 };

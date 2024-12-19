@@ -1,9 +1,9 @@
-import { IMusician } from "../interfaces/tracksInterfaces";
+import { IGenre } from "../interfaces/tracksInterfaces";
 import api from "./api";
 
-export const getMusiciansQuery = async (): Promise<IMusician[]> => {
+export const getGenresQuery = async (): Promise<IGenre[]> => {
     try {
-      const response = await api.get<IMusician[]>("/musicians");
+      const response = await api.get<IGenre[]>("/genres");
       return response.data;
     } catch (err) {
       console.error("Ошибка при выполнении запроса:", err);
