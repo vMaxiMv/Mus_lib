@@ -9,7 +9,7 @@ interface CreateTrackFormProps {
     onCreate: () => void; 
   }
 
-export const CreatePlantForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, onCreate }) => {
+export const CreateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, onCreate }) => {
     const [form] = Form.useForm();
 
     const handleCreate = async () => {

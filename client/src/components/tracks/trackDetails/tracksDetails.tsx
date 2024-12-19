@@ -5,7 +5,7 @@ import { deleteTrack, getTracksDetailQuery } from '../../../api/tracksApi'
 import css from './tracksDetails.module.css'
 import { message, Modal, Spin } from 'antd'
 import { CloseOutlined, FormOutlined } from '@ant-design/icons'
-import { UpdatePlantForm } from '../../FormModals/UpdateTrack'
+import { UpdateTrackForm } from '../../FormModals/UpdateTrack'
 
 
 
@@ -68,7 +68,7 @@ const TracksDetails = () => {
                 <button className={`${css.interactionButtons} ${css.editButton}`} onClick={() => setVisible(true)} >
                     <FormOutlined />
                 </button>
-                <UpdatePlantForm
+                <UpdateTrackForm
                         visible={visible}
                         setVisible={setVisible}
                         track={trackInfo}

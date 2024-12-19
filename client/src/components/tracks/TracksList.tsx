@@ -4,7 +4,7 @@ import css from './TracksList.module.css'
 import { ITrackDetails } from "../../interfaces/tracksInterfaces";
 import { getTracksDetailQuery } from "../../api/tracksApi";
 import { Button } from "antd";
-import { CreatePlantForm } from "../FormModals/CreateTrack";
+import { CreateTrackForm } from "../FormModals/CreateTrack";
 
 interface Track {
   track_id: string;
@@ -38,7 +38,7 @@ const TracksList: React.FC<TracksListProps> = ({ tracks, getTracks }) => {
       <Button color="default" variant="solid"  onClick={() => setVisible(true)}>
                 Добавить трек
       </Button>
-      <CreatePlantForm
+      <CreateTrackForm
         visible={visible}
         setVisible={setVisible}
         onCreate={onCreate}
