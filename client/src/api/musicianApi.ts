@@ -1,4 +1,4 @@
-import { IMusician } from "../interfaces/tracksInterfaces";
+import { IMusician } from "../interfaces/musicianInterfaces";
 import api from "./api";
 
 export const getMusiciansQuery = async (): Promise<IMusician[]> => {
