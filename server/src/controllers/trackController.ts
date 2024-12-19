@@ -66,10 +66,10 @@ export const getTrackById = async (req: Request, res: Response, next: NextFuncti
 };
 
 export const createTracks = async (req: Request, res: Response, next: NextFunction) => {
-    const { title, duration, musician_id, genre_ids } = req.body;
+    const { title, duration, musician_id, genres } = req.body;
 
     
-    if (!title || !duration || !musician_id || !Array.isArray(genre_ids)) {
+    if (!title || !duration || !musician_id || !Array.isArray(genres)) {
         return next(ApiError.badRequest('Отсутствуют обязательные данные'));
     }
 
@@ -80,7 +80,7 @@ export const createTracks = async (req: Request, res: Response, next: NextFuncti
                 duration,
                 musician_id,
                 track_genres: {
-                    create: genre_ids.map((genre_id: string) => ({
+                    create: genres.map((genre_id: string) => ({
                         genre_id, 
                     })),
                 },
@@ -98,14 +98,83 @@ export const createTracks = async (req: Request, res: Response, next: NextFuncti
 };
 
 
-export const deleteTracks = async (req: Request, res: Response, next: NextFunction) => {
-    const {id} = req.params
-    try {
-        const deletedMusician = await prisma.tracks.delete({
-            where: {track_id: String(id)}
-        })
-        res.status(200).json({message: 'Трек успешно удален', deletedMusician})
-    } catch (error){
-        return next(ApiError.badRequest('Ошибка при удалении трека'))
+export const updateTrack = async (req: Request, res: Response, next: NextFunction) => {
+  const { title, duration, musician_id, album_id, genres } = req.body; // genres - массив genre_id
+  const { id } = req.params; // id - идентификатор трека
+
+  if (!id) {
+    return next(ApiError.badRequest("ID трека не указан в URL"));
+  }
+
+  if (!title || !musician_id || !genres || !Array.isArray(genres)) {
+    return next(ApiError.badRequest("Отсутствуют обязательные данные"));
+  }
+
+  try {
+    const existingTrack = await prisma.tracks.findUnique({
+      where: { track_id: id },
+    });
+
+    if (!existingTrack) {
+      return next(ApiError.notFound("Трек не найден"));
     }
-}
+
+    const updatedTrack = await prisma.tracks.update({
+      where: { track_id: id },
+      data: {
+        title,
+        duration,
+        musician_id,
+        album_id
+      },
+    });
+
+    await prisma.track_genres.deleteMany({
+      where: { track_id: id },
+    });
+
+    const genreData = genres.map((genre_id: string) => ({
+      track_id: id,
+      genre_id,
+    }));
+
+    await prisma.track_genres.createMany({
+      data: genreData,
+    });
+
+    res.status(200).json({
+      message: "Трек успешно обновлен",
+      updatedTrack,
+    });
+  } catch (error) {
+    console.error("Ошибка при обновлении трека:", error);
+    return next(ApiError.internal("Ошибка при обновлении трека"));
+  }
+};
+
+
+export const deleteTracks = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params; // Получаем ID трека из URL
+
+    if (!id) {
+        return next(ApiError.badRequest("ID трека не указан"));
+    }
+
+    try {
+        await prisma.$transaction(async (prisma) => {
+            await prisma.track_genres.deleteMany({
+                where: { track_id: id },
+            });
+            const deletedTrack = await prisma.tracks.delete({
+                where: { track_id: id },
+            });
+
+            return deletedTrack;
+        });
+
+        res.status(200).json({ message: "Трек и его связи с жанрами успешно удалены" });
+    } catch (error) {
+        console.error("Ошибка при удалении трека:", error);
+        return next(ApiError.internal("Ошибка сервера при удалении трека"));
+    }
+};

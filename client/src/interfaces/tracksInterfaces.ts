@@ -34,7 +34,7 @@ export interface IGenre {
   genre_name: string;
 }
 
-export interface ICreateTrack{
+export interface ICreateUpdateTrack{
   title: string;
   duration: string;
   musician_id: string;

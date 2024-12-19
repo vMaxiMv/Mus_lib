@@ -76,7 +76,7 @@ const TrackForm: React.FC<TrackFormProps>  = ({ form }) => {
       </Form.Item>
       <Form.Item
                 label="Жанры"
-                name="genre_ids"
+                name="genres"
                 rules={[{ required: true, message: "Выберите хотя бы один жанр!" }]}
             >
                 <Select

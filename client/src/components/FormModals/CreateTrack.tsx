@@ -1,15 +1,15 @@
-import { Form, Modal } from "antd"
+import { Form, message, Modal } from "antd"
 
 import TrackForm from "./TrackForm";
 import { createTrack } from "../../api/tracksApi";
 
-interface CreatePlantFormProps {
+interface CreateTrackFormProps {
     visible: boolean; 
     setVisible: (visible: boolean) => void; 
     onCreate: () => void; 
   }
 
-export const CreatePlantForm: React.FC<CreatePlantFormProps> = ({ visible, setVisible, onCreate }) => {
+export const CreatePlantForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, onCreate }) => {
     const [form] = Form.useForm();
 
     const handleCreate = async () => {
@@ -19,6 +19,7 @@ export const CreatePlantForm: React.FC<CreatePlantFormProps> = ({ visible, setVi
             form.resetFields();
             onCreate(); 
             setVisible(false);
+            message.success('Трек успешно создан!');
         } catch (error) {
             console.error("Ошибка при добавлении трека:", error);
         }

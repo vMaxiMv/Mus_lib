@@ -59,20 +59,30 @@
     font-size: 14px;
 }
 
-
+.interactionButtons{
+   position: absolute;
+   background: none;
+   border: none;
+   font-size: 24px;
+   cursor: pointer;
+   transition: color 0.2s;
+}
 
 .closeButton {
-    position: absolute; 
     top: 5%; 
     right: 5%; 
-    background: none;
-    border: none;
     color: #ff4d4f;
-    font-size: 24px;
-    cursor: pointer;
-    transition: color 0.2s;
+}
+.editButton{
+    top: 5%; 
+    left: 5%; 
+    color: #4dc7ff;
 }
 
 .closeButton:hover {
     color: #d32f2f;
+}
+
+.editButton:hover{
+    color: #109cdd;
 }

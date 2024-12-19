@@ -1,4 +1,4 @@
-import { ICreateTrack, ITrackDetails, ITracks } from "../interfaces/tracksInterfaces";
+import { ICreateUpdateTrack, ITrackDetails, ITracks } from "../interfaces/tracksInterfaces";
 import api from "./api";
 
 export const getTracksQuery = async (): Promise<ITracks[]> => {
@@ -21,12 +21,22 @@ export const getTracksDetailQuery = async (track_id: string): Promise<ITrackDeta
   }
 };
 
-export const createTrack = async (trackData:ICreateTrack) => {
+export const createTrack = async (trackData:ICreateUpdateTrack) => {
   try {
     const response = await api.post("/track/create", trackData);
     return response.data;
   } catch (err) {
     console.error("Ошибка при добавлении трека", err);
+    throw err;
+  }
+};
+
+export const updateTrack = async (id:string, trackData:ICreateUpdateTrack) => {
+  try {
+    const response = await api.patch(`/track/update/${id}`, trackData);
+    return response.data;
+  } catch (err) {
+    console.error("Ошибка при обновлении трека", err);
     throw err;
   }
 };

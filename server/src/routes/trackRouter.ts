@@ -1,11 +1,11 @@
 import {Router} from 'express'
-import { createTracks, deleteTracks, getTrackById, getTracks } from '../controllers/trackController';
+import { createTracks, deleteTracks, getTrackById, getTracks, updateTrack } from '../controllers/trackController';
 const router = Router();
 
 router.post('/create', createTracks)
 router.get('/', getTracks)
 router.get('/:id', getTrackById)
-router.patch('/:id')
+router.patch('/update/:id', updateTrack)
 router.delete('/:id', deleteTracks)
 
 

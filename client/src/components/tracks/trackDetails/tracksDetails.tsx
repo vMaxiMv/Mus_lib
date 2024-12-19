@@ -4,7 +4,8 @@ import { ITrackDetails } from '../../../interfaces/tracksInterfaces'
 import { deleteTrack, getTracksDetailQuery } from '../../../api/tracksApi'
 import css from './tracksDetails.module.css'
 import { message, Modal, Spin } from 'antd'
-import { CloseOutlined } from '@ant-design/icons'
+import { CloseOutlined, FormOutlined } from '@ant-design/icons'
+import { UpdatePlantForm } from '../../FormModals/UpdateTrack'
 
 
 
@@ -13,6 +14,7 @@ const TracksDetails = () => {
     const navigate = useNavigate();
     const [trackInfo, setTrackInfo] = useState<ITrackDetails | null>(null)
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const getTrackDetail = async () => {
         if (!id) {
@@ -51,14 +53,27 @@ const TracksDetails = () => {
         const handleCancel = () => {
             setIsModalVisible(false);
         };
+        const onUpdate = () => {
+            setVisible(false);
+            getTrackDetail()
+        };
     
     return (
         <div className={css.cardContainer}>
         <div className={css.card}>
             <h2 className={css.cardTitle}>{trackInfo.title}</h2>
-                <button className={css.closeButton} onClick={showModal}>
-                <   CloseOutlined />
+                <button className={`${css.interactionButtons} ${css.closeButton}`}  onClick={showModal}>
+                    <CloseOutlined />
                 </button>
+                <button className={`${css.interactionButtons} ${css.editButton}`} onClick={() => setVisible(true)} >
+                    <FormOutlined />
+                </button>
+                <UpdatePlantForm
+                        visible={visible}
+                        setVisible={setVisible}
+                        track={trackInfo}
+                        onUpdate={onUpdate}
+                      />
             <div className={css.cardSection}>
                 <p className={css.cardText}><b>Длительность:</b> {trackInfo.duration}</p>
             </div>
