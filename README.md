@@ -113,14 +113,23 @@ CREATE TABLE genres (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
+CREATE TABLE albums (
+    album_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR NOT NULL,
+    track_count INT NOT NULL CHECK (track_count >= 1),
+    cover_image_url VARCHAR,
+    release_year INTEGER NOT NULL CHECK (release_year >= 1800 AND release_year <= EXTRACT(YEAR FROM CURRENT_DATE)),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 CREATE TABLE tracks (
     track_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR NOT NULL,
     duration INTERVAL,
     musician_id uuid REFERENCES musician(musician_id),
+    album_id uuid REFERENCES albums(album_id), 
     CONSTRAINT unique_track_musician UNIQUE (title, musician_id),
-   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -148,53 +157,10 @@ CREATE TABLE playlist_tracks (
     PRIMARY KEY (playlist_id, track_id)
 );
 
-CREATE TABLE albums (
-    album_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    title VARCHAR NOT NULL,
-    track_count INT NOT NULL CHECK (track_count >= 1),
-    cover_image_url VARCHAR,
-    release_year INTEGER NOT NULL CHECK (release_year >= 1800 AND release_year <= EXTRACT(YEAR FROM CURRENT_DATE)),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+
 ```
 ### Заполнение таблиц
-## Таблица Tracks
-```sql
-INSERT INTO tracks (title, duration, musician_id) VALUES 
-('Ich Will', INTERVAL '3:37', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('Bohemian Rhapsody', INTERVAL '5:55', (SELECT musician_id FROM musician WHERE name = 'Queen')),
-('Тяни', INTERVAL '3:35', (SELECT musician_id FROM musician WHERE name = 'Король и шут')),
-('Engel', INTERVAL '4:24', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('Links 2-3-4', INTERVAL '3:36', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('Smells Like Teen Spirit', INTERVAL '5:01', (SELECT musician_id FROM musician WHERE name = 'Nirvana')),
-('Sonne', INTERVAL '4:32', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('Come as You Are', INTERVAL '3:38', (SELECT musician_id FROM musician WHERE name = 'Nirvana')),
-('Кукла колдуна', INTERVAL '4:00', (SELECT musician_id FROM musician WHERE name = 'Король и шут')),
-('Времена года', INTERVAL '5:00', (SELECT musician_id FROM musician WHERE name = 'Петр Чайковский')),
-('Лебединое озеро', INTERVAL '5:10', (SELECT musician_id FROM musician WHERE name = 'Петр Чайковский')),
-('Amour', INTERVAL '4:49', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('Проклятый старый дом', INTERVAL '4:20', (SELECT musician_id FROM musician WHERE name = 'Король и шут')),
-('Mutter', INTERVAL '4:28', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('I am', INTERVAL '3:50', (SELECT musician_id FROM musician WHERE name = 'Macan')),
-('Владимирский централ', INTERVAL '2:30', (SELECT musician_id FROM musician WHERE name = 'Михаил Круг')),
-('Щелкунчик', INTERVAL '3:05', (SELECT musician_id FROM musician WHERE name = 'Петр Чайковский')),
-('Город под подошвой', INTERVAL '4:15', (SELECT musician_id FROM musician WHERE name = 'Oxxxymiron')),
-('Переплетено', INTERVAL '2:40', (SELECT musician_id FROM musician WHERE name = 'Oxxxymiron')),
-('Май', INTERVAL '3:55', (SELECT musician_id FROM musician WHERE name = 'Macan')),
-('Неваляшка', INTERVAL '4:10', (SELECT musician_id FROM musician WHERE name = 'Oxxxymiron')),
-('Mein Herz Brennt', INTERVAL '4:39', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('In Bloom', INTERVAL '4:14', (SELECT musician_id FROM musician WHERE name = 'Nirvana')),
-('Amerika', INTERVAL '3:46', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('Du Hast', INTERVAL '3:54', (SELECT musician_id FROM musician WHERE name = 'Rammstein')),
-('Here comes the Sun', INTERVAL '3:12', (SELECT musician_id FROM musician WHERE name = 'The Beatles')),
-('Heart-Shaped Box', INTERVAL '4:41', (SELECT musician_id FROM musician WHERE name = 'Nirvana')),
-('Там где нас нет', INTERVAL '4:25', (SELECT musician_id FROM musician WHERE name = 'Oxxxymiron')),
-('Lithium', INTERVAL '4:17', (SELECT musician_id FROM musician WHERE name = 'Nirvana')),
-('The Show Must Go On', INTERVAL '4:23', (SELECT musician_id FROM musician WHERE name = 'Queen')),
-('Тишина', INTERVAL '2:45', (SELECT musician_id FROM musician WHERE name = 'Михаил Круг')),
-('Yesterday', INTERVAL '2:33', (SELECT musician_id FROM musician WHERE name = 'The Beatles'));
-```
+
 ### Таблица genres
 ```sql
 INSERT INTO genres (genre_name) VALUES 
@@ -211,6 +177,21 @@ INSERT INTO genres (genre_name) VALUES
 ('Регги'),
 ('Хип хоп');
 ```
+### Таблица playlists
+```sql
+INSERT INTO playlists (name, cover_image_url, description) VALUES 
+('Мой самый любимый плейлист', 'https://example.com/covers/playlist_cover.jpg', 'Этот плейлист состоит из моих самых любимых треков' ),
+('Для учебы', 'https://example.com/covers/playlist_cover.jpg', 'Этот плейлист состоит из моих самых любимых треков' ),
+('Для тренировки в зале', 'https://example.com/covers/gym.jpg', 'Этот плейлист состоит из песен для тренировок в зале' ),
+('Для прогулки', 'https://example.com/covers/walk.jpg', 'Этот плейлист состоит из песен для прогулки' ),
+('Для работы', 'https://example.com/covers/work.jpg', 'Этот плейлист состоит из песен для работы' ),
+('Для кулинарии', 'https://example.com/covers/cook.jpg', 'Этот плейлист состоит из песен для приготовления еды' ),
+('Для пробежки', 'https://example.com/covers/run.jpg', 'Этот плейлист состоит из песен для пробежки' ),
+('Музыка для путешествий', 'https://example.com/covers/travel.jpg', 'Этот плейлист состоит из песен для дальних путешествий' ),
+('Для отдыха', 'https://example.com/covers/relax.jpg', 'Этот плейлист состоит из песен для отдыха' ),
+('Детская музыка', 'https://example.com/covers/child.jpg', 'Этот плейлист состоит из детских песен' );
+```
+
 ### Таблица musicians
 ```sql
 INSERT INTO musician (name, birth_date, country) VALUES 
@@ -225,20 +206,137 @@ INSERT INTO musician (name, birth_date, country) VALUES
 ('Rammstein', '1994-01-01', 'Germany'),
 ('Nirvana', '1960-01-01', 'USA');
 ```
-
-### Таблица playlists
+## Таблица Tracks
 ```sql
-INSERT INTO playlists (name, cover_image_url, description) VALUES 
-('My Favorite Playlist', 'https://example.com/covers/playlist_cover.jpg', 'Этот плейлист состоит из моих самых любимых треков' ),
-('Для учебы', 'https://example.com/covers/playlist_cover.jpg', 'Этот плейлист состоит из моих самых любимых треков' ),
-('Для тренировки в зале', 'https://example.com/covers/gym.jpg', 'Этот плейлист состоит из песен для тренировок в зале' ),
-('Для прогулки', 'https://example.com/covers/walk.jpg', 'Этот плейлист состоит из песен для прогулки' ),
-('Для работы', 'https://example.com/covers/work.jpg', 'Этот плейлист состоит из песен для работы' ),
-('Для кулинарии', 'https://example.com/covers/cook.jpg', 'Этот плейлист состоит из песен для приготовления еды' ),
-('Для пробежки', 'https://example.com/covers/run.jpg', 'Этот плейлист состоит из песен для пробежки' ),
-('Музыка для путешествий', 'https://example.com/covers/travel.jpg', 'Этот плейлист состоит из песен для дальних путешествий' ),
-('Для отдыха', 'https://example.com/covers/relax.jpg', 'Этот плейлист состоит из песен для отдыха' ),
-('Детская музыка', 'https://example.com/covers/child.jpg', 'Этот плейлист состоит из детских песен' ),
+INSERT INTO tracks (title, duration, musician_id, album_id)
+VALUES
+    ('Ich Will', INTERVAL '3:37', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Mutter')),
+
+    ('Bohemian Rhapsody', INTERVAL '5:55', 
+     (SELECT musician_id FROM musician WHERE name = 'Queen'), 
+     (SELECT album_id FROM albums WHERE title = 'A Night at the Opera')),
+
+    ('Тяни', INTERVAL '3:35', 
+     (SELECT musician_id FROM musician WHERE name = 'Король и шут'), 
+     (SELECT album_id FROM albums WHERE title = 'Мадам')),
+
+    ('Engel', INTERVAL '4:24', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Sehnsucht')),
+
+    ('Links 2-3-4', INTERVAL '3:36', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Mutter')),
+
+    ('Smells Like Teen Spirit', INTERVAL '5:01', 
+     (SELECT musician_id FROM musician WHERE name = 'Nirvana'), 
+     (SELECT album_id FROM albums WHERE title = 'Nevermind')),
+
+    ('Sonne', INTERVAL '4:32', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Mutter')),
+
+    ('Come as You Are', INTERVAL '3:38', 
+     (SELECT musician_id FROM musician WHERE name = 'Nirvana'), 
+     (SELECT album_id FROM albums WHERE title = 'Nevermind')),
+
+    ('Кукла колдуна', INTERVAL '4:00', 
+     (SELECT musician_id FROM musician WHERE name = 'Король и шут'), 
+     (SELECT album_id FROM albums WHERE title = 'Акустический альбом')),
+
+    ('Времена года', INTERVAL '5:00', 
+     (SELECT musician_id FROM musician WHERE name = 'Петр Чайковский'), 
+     (SELECT album_id FROM albums WHERE title = 'Щелкунчик')),
+
+    ('Лебединое озеро', INTERVAL '5:10', 
+     (SELECT musician_id FROM musician WHERE name = 'Петр Чайковский'), 
+     (SELECT album_id FROM albums WHERE title = 'Щелкунчик')),
+
+    ('Amour', INTERVAL '4:49', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Reise, Reise')),
+
+    ('Проклятый старый дом', INTERVAL '4:20', 
+     (SELECT musician_id FROM musician WHERE name = 'Король и шут'), 
+     (SELECT album_id FROM albums WHERE title = 'Мадам')),
+
+    ('Mutter', INTERVAL '4:28', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Mutter')),
+
+    ('I am', INTERVAL '3:50', 
+     (SELECT musician_id FROM musician WHERE name = 'Macan'), 
+     (SELECT album_id FROM albums WHERE title = 'I am')),
+
+    ('Владимирский централ', INTERVAL '2:30', 
+     (SELECT musician_id FROM musician WHERE name = 'Михаил Круг'), 
+     (SELECT album_id FROM albums WHERE title = 'Тишина')),
+
+    ('Щелкунчик', INTERVAL '3:05', 
+     (SELECT musician_id FROM musician WHERE name = 'Петр Чайковский'), 
+     (SELECT album_id FROM albums WHERE title = 'Щелкунчик')),
+
+    ('Город под подошвой', INTERVAL '4:15', 
+     (SELECT musician_id FROM musician WHERE name = 'Oxxxymiron'), 
+     (SELECT album_id FROM albums WHERE title = 'Горгород')),
+
+    ('Переплетено', INTERVAL '2:40', 
+     (SELECT musician_id FROM musician WHERE name = 'Oxxxymiron'), 
+     (SELECT album_id FROM albums WHERE title = 'Горгород')),
+
+    ('Май', INTERVAL '3:55', 
+     (SELECT musician_id FROM musician WHERE name = 'Macan'), 
+     (SELECT album_id FROM albums WHERE title = 'I am')),
+
+    ('Неваляшка', INTERVAL '4:10', 
+     (SELECT musician_id FROM musician WHERE name = 'Oxxxymiron'), 
+     (SELECT album_id FROM albums WHERE title = 'Горгород')),
+
+    ('Mein Herz Brennt', INTERVAL '4:39', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Mutter')),
+
+    ('In Bloom', INTERVAL '4:14', 
+     (SELECT musician_id FROM musician WHERE name = 'Nirvana'), 
+     (SELECT album_id FROM albums WHERE title = 'Nevermind')),
+
+    ('Amerika', INTERVAL '3:46', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Reise, Reise')),
+
+    ('Du Hast', INTERVAL '3:54', 
+     (SELECT musician_id FROM musician WHERE name = 'Rammstein'), 
+     (SELECT album_id FROM albums WHERE title = 'Sehnsucht')),
+
+    ('Here comes the Sun', INTERVAL '3:12', 
+     (SELECT musician_id FROM musician WHERE name = 'The Beatles'), 
+     (SELECT album_id FROM albums WHERE title = 'Abbey Road')),
+
+    ('Heart-Shaped Box', INTERVAL '4:41', 
+     (SELECT musician_id FROM musician WHERE name = 'Nirvana'), 
+     (SELECT album_id FROM albums WHERE title = 'Nevermind')),
+
+    ('Там где нас нет', INTERVAL '4:25', 
+     (SELECT musician_id FROM musician WHERE name = 'Oxxxymiron'), 
+     (SELECT album_id FROM albums WHERE title = 'Горгород')),
+
+    ('Lithium', INTERVAL '4:17', 
+     (SELECT musician_id FROM musician WHERE name = 'Nirvana'), 
+     (SELECT album_id FROM albums WHERE title = 'Nevermind')),
+
+    ('The Show Must Go On', INTERVAL '4:23', 
+     (SELECT musician_id FROM musician WHERE name = 'Queen'), 
+     (SELECT album_id FROM albums WHERE title = 'A Night at the Opera')),
+
+    ('Тишина', INTERVAL '2:45', 
+     (SELECT musician_id FROM musician WHERE name = 'Михаил Круг'), 
+     (SELECT album_id FROM albums WHERE title = 'Тишина')),
+
+    ('Yesterday', INTERVAL '2:33', 
+     (SELECT musician_id FROM musician WHERE name = 'The Beatles'), 
+     (SELECT album_id FROM albums WHERE title = 'Abbey Road'));
 ```
 
 ### Таблица albums
@@ -300,13 +398,13 @@ INSERT INTO track_genres (track_id, genre_id) VALUES
 ((SELECT track_id FROM tracks WHERE title = 'Smells Like Teen Spirit'), (SELECT genre_id FROM genres WHERE genre_name = 'Рок')),
 ((SELECT track_id FROM tracks WHERE title = 'Smells Like Teen Spirit'), (SELECT genre_id FROM genres WHERE genre_name = 'Панк-рок')),
 ((SELECT track_id FROM tracks WHERE title = 'Come as You Are'), (SELECT genre_id FROM genres WHERE genre_name = 'Рок')),
-((SELECT track_id FROM tracks WHERE title = 'Come as You Are'), (SELECT genre_id FROM genres WHERE genre_name = 'Панк-рок'));
+((SELECT track_id FROM tracks WHERE title = 'Come as You Are'), (SELECT genre_id FROM genres WHERE genre_name = 'Панк-рок')),
 ((SELECT track_id FROM tracks WHERE title = 'Amour'), (SELECT genre_id FROM genres WHERE genre_name = 'Рок')),
 ((SELECT track_id FROM tracks WHERE title = 'Mutter'), (SELECT genre_id FROM genres WHERE genre_name = 'Рок')),
 ((SELECT track_id FROM tracks WHERE title = 'Mein Herz Brennt'), (SELECT genre_id FROM genres WHERE genre_name = 'Рок')),
 ((SELECT track_id FROM tracks WHERE title = 'In Bloom'), (SELECT genre_id FROM genres WHERE genre_name = 'Рок')),
 ((SELECT track_id FROM tracks WHERE title = 'In Bloom'), (SELECT genre_id FROM genres WHERE genre_name = 'Панк-рок')),
-((SELECT track_id FROM tracks WHERE title = 'Yesterday  '), (SELECT genre_id FROM genres WHERE genre_name = 'Рок'));
+((SELECT track_id FROM tracks WHERE title = 'Yesterday'), (SELECT genre_id FROM genres WHERE genre_name = 'Рок'));
 ```
 
 ### Таблица tracks_playlists
@@ -321,13 +419,13 @@ VALUES
     ((SELECT playlist_id FROM playlists WHERE name = 'Мой самый любимый плейлист'), (SELECT track_id FROM tracks WHERE title = 'Проклятый старый дом')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Мой самый любимый плейлист'), (SELECT track_id FROM tracks WHERE title = 'I am')),
 
-      Плейлист 2
+     -- Плейлист 2
     ((SELECT playlist_id FROM playlists WHERE name = 'Для пробежки'), (SELECT track_id FROM tracks WHERE title = 'Come as You Are')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для пробежки'), (SELECT track_id FROM tracks WHERE title = 'Links 2-3-4')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для пробежки'), (SELECT track_id FROM tracks WHERE title = 'Там где нас нет')),
 
 
-      Плейлист 3
+    --  Плейлист 3
     ((SELECT playlist_id FROM playlists WHERE name = 'Для прогулки'), (SELECT track_id FROM tracks WHERE title = 'Mutter')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для прогулки'), (SELECT track_id FROM tracks WHERE title = 'Лебединое озеро')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для прогулки'), (SELECT track_id FROM tracks WHERE title = 'In Bloom')),
@@ -335,7 +433,7 @@ VALUES
     ((SELECT playlist_id FROM playlists WHERE name = 'Для прогулки'), (SELECT track_id FROM tracks WHERE title = 'Май')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для прогулки'), (SELECT track_id FROM tracks WHERE title = 'Щелкунчик')),
 
-      Плейлист 4
+     -- Плейлист 4
     ((SELECT playlist_id FROM playlists WHERE name = 'Для отдыха'), (SELECT track_id FROM tracks WHERE title = 'Лебединое озеро')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для отдыха'), (SELECT track_id FROM tracks WHERE title = 'Щелкунчик')),
    
@@ -348,7 +446,7 @@ VALUES
     ((SELECT playlist_id FROM playlists WHERE name = 'Для учебы'), (SELECT track_id FROM tracks WHERE title = 'Проклятый старый дом')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для учебы'), (SELECT track_id FROM tracks WHERE title = 'Тяни')),
 
-      Плейлист 6
+     -- Плейлист 6
     ((SELECT playlist_id FROM playlists WHERE name = 'Для тренировки в зале'), (SELECT track_id FROM tracks WHERE title = 'Тишина')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для тренировки в зале'), (SELECT track_id FROM tracks WHERE title = 'Engel')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Для тренировки в зале'), (SELECT track_id FROM tracks WHERE title = 'Времена года')),
@@ -356,13 +454,12 @@ VALUES
 
 
 
-      Плейлист 7
-    ((SELECT playlist_id FROM playlists WHERE name = 'Детская музыка'), (SELECT track_id FROM tracks WHERE title = 'Mutter')),
+     Плейлист 7
+   ((SELECT playlist_id FROM playlists WHERE name = 'Детская музыка'), (SELECT track_id FROM tracks WHERE title = 'Mutter')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Детская музыка'), (SELECT track_id FROM tracks WHERE title = 'Щелкунчик')),
-    ((SELECT playlist_id FROM playlists WHERE name = 'Детская музыка'), (SELECT track_id FROM tracks WHERE title = 'Времена года')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Детская музыка'), (SELECT track_id FROM tracks WHERE title = 'Лебединое озеро')),
     ((SELECT playlist_id FROM playlists WHERE name = 'Детская музыка'), (SELECT track_id FROM tracks WHERE title = 'Времена года')),
-    ((SELECT playlist_id FROM playlists WHERE name = 'Детская музыка'), (SELECT track_id FROM tracks WHERE title = 'I am')),
+   ((SELECT playlist_id FROM playlists WHERE name = 'Детская музыка'), (SELECT track_id FROM tracks WHERE title = 'I am'));
 
       -- Плейлист 8
     ((SELECT playlist_id FROM playlists WHERE name = 'Музыка для путешествий'), (SELECT track_id FROM tracks WHERE title = 'Владимирский централ')),
