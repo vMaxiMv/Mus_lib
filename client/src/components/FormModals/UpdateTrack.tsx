@@ -12,7 +12,7 @@ interface CreateTrackFormProps {
     onUpdate: () => void; 
   }
 
-export const UpdatePlantForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, track, onUpdate }) => {
+export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, track, onUpdate }) => {
     const [form] = Form.useForm();
 
     useEffect(()=>{
