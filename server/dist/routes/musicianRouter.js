@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const musicianController_1 = require("../controllers/musicianController");
+const router = (0, express_1.Router)();
+router.post('/create', musicianController_1.createMusicians);
+router.get('/:id', musicianController_1.getMusiciansById);
+router.get('/', musicianController_1.getMusicians);
+router.patch('/update', musicianController_1.updateMusicians);
+router.delete('/delete/:id', musicianController_1.deleteMusicians);
+module.exports = router;

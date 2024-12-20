@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const router = (0, express_1.Router)();
+const trackRouter = require('./trackRouter');
+const musicianRouter = require('./musicianRouter');
+const genreRouter = require('./genreRouter');
+const playlistRouter = require('./playlistRouter');
+const playlistTracksRouter = require('./playlistTracksRouter');
+router.use('/track', trackRouter);
+router.use('/musicians', musicianRouter);
+router.use('/playlist', playlistRouter);
+router.use('/genres', genreRouter);
+router.use('/playlistTracks', playlistTracksRouter);
+module.exports = router;
