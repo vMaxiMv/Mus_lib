@@ -9,6 +9,7 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://postgres:ippdbdmbbmbu@db:5432/mus_library
+      NODE_ENV: production
   frontend:
     build:
       context: ./client

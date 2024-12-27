@@ -44,7 +44,7 @@ export const updateTrack = async (id:string, trackData:ICreateUpdateTrack) => {
 
 export const deleteTrack = async (id:string) => {
   try {
-    const response = await api.delete(`/track/${id}`);
+    const response = await api.delete(`/track/delete/${id}`);
     return response.data;
   } catch (err) {
     console.error("Ошибка при удалении трека", err);

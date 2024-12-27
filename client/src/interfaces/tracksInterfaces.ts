@@ -39,3 +39,9 @@ export interface ICreateUpdateTrack{
   duration: string;
   musician_id: string;
 }
+
+export interface ITrackPlaylist{
+  track_id: string;
+  title: string;
+  duration: string
+}

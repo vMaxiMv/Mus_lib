@@ -1,5 +1,7 @@
 import Genres from "./pages/Genres";
 import Musicians from "./pages/Musicians";
+import PlaylistDetailsPage from "./pages/PlaylistDetailsPage";
+import Playlists from "./pages/Playlists";
 import Preview from "./pages/Preview";
 import TrackDetailsPage from "./pages/TrackDetailsPage";
 
@@ -25,6 +27,14 @@ export const musRoutes = [
     {
         path: '/musicians',
         Component: Musicians
-    }
+    },
+    {
+        path: '/playlists',
+        Component: Playlists
+    },
+    {
+        path: '/playlists/:id',
+        Component: PlaylistDetailsPage
+    },
         
 ]

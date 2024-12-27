@@ -40,7 +40,7 @@ const TracksDetails = () => {
                 await deleteTrack(id);
                 message.success('Трек успешно удален!');
                 setIsModalVisible(false);
-                navigate('/tracks'); // Перенаправляем на список треков после удаления
+                navigate('/tracks');
             } catch (error) {
                 message.error('Ошибка при удалении трека');
                 console.error("Ошибка при удалении трека:", error);
@@ -72,7 +72,7 @@ const TracksDetails = () => {
                         visible={visible}
                         setVisible={setVisible}
                         track={trackInfo}
-                        onUpdate={onUpdate}
+                        onCreateUpdate={onUpdate}
                       />
             <div className={css.cardSection}>
                 <p className={css.cardText}><b>Длительность:</b> {trackInfo.duration}</p>

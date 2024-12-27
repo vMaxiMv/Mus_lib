@@ -1,0 +1,111 @@
+.grid {
+    padding: 20px;
+  }
+  
+  .card {
+    width: 100%;
+  }
+  
+  .cover {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .form {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  .addButton{
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    margin-bottom: 2%;
+  }
+
+  .playlistContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    height: 100vh;
+  }
+  
+  .playlistHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .playlistCover {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+  }
+  
+  .playlistInfo {
+    flex: 1;
+  }
+  
+  .playlistTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .playlistDescription {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .playlistMeta {
+    font-size: 14px;
+    color: #888;
+  }
+  
+  .playlistTracks {
+    width: 100%;
+  }
+  
+  .tracksTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .tracksList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .trackItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .trackTitle {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .trackDuration {
+    font-size: 14px;
+    color: #888;
+  }

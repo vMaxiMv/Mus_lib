@@ -11,15 +11,78 @@ const prisma = new PrismaClient()
 
 
 
-export const getPlaylists = async ({req, res, next}: IQueryTypes)=>{
+export const getPlaylists = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const playlists = await prisma.playlists.findMany();
-        res.status(200).json(playlists)
+    
+
+        const baseUrl = `${req.protocol}://${req.get("host")}/static/`;
+        console.log('baseUrl:', baseUrl);  // Логируем полученные данные
+        const updatedPlaylists = playlists.map(playlist => {
+            if (playlist.cover_image_url && !playlist.cover_image_url.startsWith('http')) {
+                playlist.cover_image_url = `${baseUrl}${path.basename(playlist.cover_image_url)}`;
+            }
+            return playlist;
+        });
+        console.log('Updated Playlists:', updatedPlaylists);  // Логируем обновленные данные
+
+        res.status(200).json(updatedPlaylists);
+    } catch (error) {
+        console.error('Error fetching playlists:', error);  // Логируем ошибку
+        return next(ApiError.badRequest('Ошибка при получении плейлистов'));
     }
-    catch(error){
-        return next(ApiError.badRequest('Ошибка'))
+};
+
+  
+
+  export const getPlaylistById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return next(ApiError.badRequest("Не указан ID плейлиста"));
+        }
+
+        const playlist = await prisma.playlists.findUnique({
+            where: { playlist_id: id },
+            include: {
+                playlist_tracks: {
+                    include: {
+                        tracks: true,
+                    },
+                },
+            },
+        });
+
+
+        if (!playlist) {
+            return next(ApiError.notFound("Плейлист не найден"));
+        }
+
+        const baseUrl = `${req.protocol}://${req.get("host")}/static/`;
+        if (playlist.cover_image_url && !playlist.cover_image_url.startsWith("http")) {
+            playlist.cover_image_url = `${baseUrl}${path.basename(playlist.cover_image_url)}`;
+        }
+
+        const formattedPlaylist = {
+            playlist_id: playlist.playlist_id,
+            name: playlist.name,
+            description: playlist.description,
+            cover_image_url: playlist.cover_image_url,
+            created_at: playlist.created_at,
+            updated_at: playlist.updated_at,
+            tracks: playlist.playlist_tracks.map(pt => ({
+                track_id: pt.tracks.track_id,
+                title: pt.tracks.title,
+                duration: pt.tracks.duration,
+            })),
+        };
+
+        res.status(200).json(formattedPlaylist);
+    } catch (error) {
+        return next(ApiError.badRequest("Ошибка при получении плейлиста"));
     }
-}
+};
 
 export const createPlaylists = async (req: Request, res: Response, next: NextFunction) => {
     const {name, description} = req.body
@@ -31,13 +94,17 @@ export const createPlaylists = async (req: Request, res: Response, next: NextFun
 
     const coverImageFile = req.files?.cover_image_url as UploadedFile;
     const fileName = `${uuid.v4()}.jpg`;
-    const staticDir = path.resolve(__dirname, '..', 'static')
+    const staticDir =
+        process.env.NODE_ENV === 'production'
+            ? path.resolve(process.cwd(), 'dist/static')
+            : path.resolve(process.cwd(), 'src/static');
+
     coverImageFile.mv(path.resolve(staticDir, fileName))
 
     if (!fs.existsSync(staticDir)) {
         fs.mkdirSync(staticDir, { recursive: true });
     }
-
+    console.log('path.resolve',path.resolve(staticDir, fileName))
     if(!name || !description){
         return next(ApiError.badRequest('Отсутствуют обязательные данные'))
     }
@@ -77,9 +144,31 @@ export const createPlaylists = async (req: Request, res: Response, next: NextFun
 export const deletePlaylists = async (req: Request, res: Response, next: NextFunction) => {
     const {id} = req.params
     try {
+        const playlist = await prisma.playlists.findUnique({
+            where: { playlist_id: String(id) },
+        });
+
+        if (!playlist) {
+            return next(ApiError.notFound('Плейлист не найден'));
+        }
+
+        const staticDir =
+            process.env.NODE_ENV === 'production'
+                ? path.resolve(process.cwd(), 'dist/static')
+                : path.resolve(process.cwd(), 'src/static');
+        const filePath = path.resolve(staticDir, playlist.cover_image_url);
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        } else {
+            console.warn(`Файл обложки "${playlist.cover_image_url}" не найден`);
+        }
+
+
         const deletedPlaylist = await prisma.playlists.delete({
             where: {playlist_id: String(id)}
         })
+        
         res.status(200).json({message: 'Плейлист успешно удален', deletedPlaylist})
     } catch (error){
         return next(ApiError.badRequest('Ошибка при удалении плейлиста'))

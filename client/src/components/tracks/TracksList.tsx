@@ -41,7 +41,7 @@ const TracksList: React.FC<TracksListProps> = ({ tracks, getTracks }) => {
       <CreateTrackForm
         visible={visible}
         setVisible={setVisible}
-        onCreate={onCreate}
+        onCreateUpdate={onCreate}
       />
       </div>
       

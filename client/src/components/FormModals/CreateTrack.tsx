@@ -2,14 +2,10 @@ import { Form, message, Modal } from "antd"
 
 import TrackForm from "./TrackForm";
 import { createTrack } from "../../api/tracksApi";
+import { IForm } from "../../interfaces/formInterface";
 
-interface CreateTrackFormProps {
-    visible: boolean; 
-    setVisible: (visible: boolean) => void; 
-    onCreate: () => void; 
-  }
 
-export const CreateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, onCreate }) => {
+export const CreateTrackForm: React.FC<IForm> = ({ visible, setVisible, onCreateUpdate }) => {
     const [form] = Form.useForm();
 
     const handleCreate = async () => {
@@ -17,7 +13,7 @@ export const CreateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVi
             const values = await form.validateFields();
             await createTrack(values); 
             form.resetFields();
-            onCreate(); 
+            onCreateUpdate(); 
             setVisible(false);
             message.success('Трек успешно создан!');
         } catch (error) {

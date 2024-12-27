@@ -4,15 +4,13 @@ import TrackForm from "./TrackForm";
 import { createTrack, updateTrack } from "../../api/tracksApi";
 import { ITrackDetails } from "../../interfaces/tracksInterfaces";
 import { useEffect } from "react";
+import { IForm } from "../../interfaces/formInterface";
 
-interface CreateTrackFormProps {
-    visible: boolean; 
-    setVisible: (visible: boolean) => void; 
-    track: ITrackDetails;
-    onUpdate: () => void; 
+interface CreateTrackFormProps extends IForm {
+    track: ITrackDetails; 
   }
 
-export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, track, onUpdate }) => {
+export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, track, onCreateUpdate }) => {
     const [form] = Form.useForm();
 
     useEffect(()=>{
@@ -31,7 +29,7 @@ export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVi
             const values = await form.validateFields();
             await updateTrack(track.track_id, values); 
             form.resetFields();
-            onUpdate(); 
+            onCreateUpdate(); 
             setVisible(false);
             message.success('Трек успешно обновлен!');
         } catch (error) {

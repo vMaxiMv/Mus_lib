@@ -14,6 +14,9 @@ RUN npm install
 # Копирование всего кода
 COPY . .
 
+# Копирование папки static в dist
+RUN mkdir -p dist/static && cp -r src/static/* dist/static/
+
 # Компиляция TypeScript (если требуется)
 RUN npm run build
 

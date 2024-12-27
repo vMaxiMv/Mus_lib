@@ -7,5 +7,5 @@ router.post('/create', trackController_1.createTracks);
 router.get('/', trackController_1.getTracks);
 router.get('/:id', trackController_1.getTrackById);
 router.patch('/update/:id', trackController_1.updateTrack);
-router.delete('/:id', trackController_1.deleteTracks);
+router.delete('/delete/:id', trackController_1.deleteTracks);
 module.exports = router;

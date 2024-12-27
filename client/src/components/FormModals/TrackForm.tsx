@@ -3,10 +3,9 @@ import { Form, FormInstance, Input, Select } from "antd";
 import { IGenre, IMusician } from "../../interfaces/tracksInterfaces";
 import { getMusiciansQuery } from "../../api/musicianApi";
 import { getGenresQuery } from "../../api/genresApi";
+import { TrackFormProps } from "../../interfaces/formInterface";
 
-interface TrackFormProps {
-    form: FormInstance; // Указываем тип для form
-  }
+
 
 const TrackForm: React.FC<TrackFormProps>  = ({ form }) => {
     const [musicians, setMusicians] = useState<IMusician[]>([]);
