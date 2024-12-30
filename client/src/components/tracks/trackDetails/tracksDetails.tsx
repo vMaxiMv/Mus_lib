@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import  { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ITrackDetails } from '../../../interfaces/tracksInterfaces'
-import { deleteTrack, getTracksDetailQuery } from '../../../api/tracksApi'
+import {useDeleteTrackMutation, useGetTrackDetailsQuery } from '../../../api/tracksApi'
 import css from './tracksDetails.module.css'
 import { message, Modal, Spin } from 'antd'
 import { CloseOutlined, FormOutlined } from '@ant-design/icons'
@@ -12,39 +11,34 @@ import { UpdateTrackForm } from '../../FormModals/UpdateTrack'
 const TracksDetails = () => {
     const { id} = useParams<{id:string}>()
     const navigate = useNavigate();
-    const [trackInfo, setTrackInfo] = useState<ITrackDetails | null>(null)
+
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [visible, setVisible] = useState(false);
 
-    const getTrackDetail = async () => {
-        if (!id) {
-            console.error("ID трека не указан в URL");
-            return;
-        }
-          try {
-              const data = await getTracksDetailQuery(id)
-              setTrackInfo(data)
-          } catch (error) {
-              console.error("Ошибка при получении данных о треках:", error);
-          }
+    const { data: trackInfo, isLoading } = useGetTrackDetailsQuery(id || '');
+    const deleteTrackMutation = useDeleteTrackMutation();
+
+    if (isLoading || !trackInfo) {
+        return (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <Spin />
+          </div>
+        );
       }
-       useEffect(() => {
-            getTrackDetail()
-          }, [id]);
-          if (!trackInfo) {
-            return <div style={{display:'flex', justifyContent:'center', alignItems:'center', height: '100vh'}}><Spin/></div>;
-        }
+
         const handleDelete = async () => {
             if (!id) return;
-            try {
-                await deleteTrack(id);
-                message.success('Трек успешно удален!');
-                setIsModalVisible(false);
-                navigate('/tracks');
-            } catch (error) {
-                message.error('Ошибка при удалении трека');
-                console.error("Ошибка при удалении трека:", error);
-            }
+            deleteTrackMutation.mutate(id, {
+                onSuccess: () => {
+                  message.success('Трек успешно удален!');
+                  setIsModalVisible(false);
+                  navigate('/tracks');
+                },
+                onError: (error) => {
+                  message.error('Ошибка при удалении трека');
+                  console.error('Ошибка при удалении трека:', error);
+                },
+              });
         };
 
         const showModal = () => {
@@ -55,7 +49,6 @@ const TracksDetails = () => {
         };
         const onUpdate = () => {
             setVisible(false);
-            getTrackDetail()
         };
     
     return (
@@ -112,7 +105,7 @@ const TracksDetails = () => {
                 cancelText="Отмена"
             >
                 <p>Вы уверены, что хотите удалить этот трек?</p>
-            </Modal>
+        </Modal>
     </div>
     )
 }

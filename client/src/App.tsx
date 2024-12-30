@@ -4,17 +4,22 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import AppRouter from './components/AppRouter';
 import { Layout } from 'antd';
 import HeaderComponent from './components/HeaderComponent';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const { Header, Content, Footer } = Layout;
 
+const queryClient = new QueryClient()
+
 const App = () => {
   return (
-    <Router>
-      <Layout >
-      <HeaderComponent />
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Layout >
+        <HeaderComponent />
         <AppRouter/>
-      </Layout>
-    </Router>
+        </Layout>
+      </Router>
+    </QueryClientProvider>
   )
 }
 

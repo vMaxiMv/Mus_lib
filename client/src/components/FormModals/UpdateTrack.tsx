@@ -1,17 +1,23 @@
 import { Form, message, Modal } from "antd"
 
 import TrackForm from "./TrackForm";
-import { createTrack, updateTrack } from "../../api/tracksApi";
 import { ITrackDetails } from "../../interfaces/tracksInterfaces";
 import { useEffect } from "react";
 import { IForm } from "../../interfaces/formInterface";
+import { useUpdateTrackMutation } from "../../api/tracksApi";
 
 interface CreateTrackFormProps extends IForm {
     track: ITrackDetails; 
   }
 
-export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVisible, track, onCreateUpdate }) => {
+export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({ 
+    visible, 
+    setVisible, 
+    track, 
+    onCreateUpdate 
+}) => {
     const [form] = Form.useForm();
+    const updateTrackMutation = useUpdateTrackMutation();
 
     useEffect(()=>{
         if(track){
@@ -27,11 +33,21 @@ export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({ visible, setVi
     const handleUpdate = async () => {
         try {
             const values = await form.validateFields();
-            await updateTrack(track.track_id, values); 
-            form.resetFields();
-            onCreateUpdate(); 
-            setVisible(false);
-            message.success('Трек успешно обновлен!');
+            updateTrackMutation.mutate({id: track.track_id, trackData: values},
+                {
+                    onSuccess: () => {
+                        form.resetFields();
+                        onCreateUpdate(); 
+                        setVisible(false);
+                        message.success('Трек успешно обновлен!');
+                    },
+                    onError: (error) => {
+                        message.error("Ошибка при обновлении трека");
+                        console.error("Ошибка при обновлении трека:", error);
+                      },
+                }
+            )
+            
         } catch (error) {
             console.error("Ошибка при обновлении трека:", error);
         }

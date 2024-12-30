@@ -1,5 +1,4 @@
-import { IMusician } from "../interfaces/musicianInterfaces";
-import { ICreateUpdatePlaylist, IPlayList, IPlayListDetail } from "../interfaces/playlistInterface";
+import { IPlayList, IPlayListDetail } from "../interfaces/playlistInterface";
 import api from "./api";
 
 export const getPlaylistsQuery = async (): Promise<IPlayList[]> => {
@@ -18,7 +17,7 @@ export const getPlaylistsQuery = async (): Promise<IPlayList[]> => {
       return response.data;
     } catch (err) {
       console.error("Ошибка при выполнении запроса:", err);
-      throw err; // Передаем ошибку дальше, чтобы её можно было обработать в вызывающем коде
+      throw err; 
     }
   };
 

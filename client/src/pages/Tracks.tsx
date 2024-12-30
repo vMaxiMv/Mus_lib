@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getTracksQuery } from '../api/tracksApi'
+import { useGetTracksQuery } from '../api/tracksApi'
 
 import { ITracks } from '../interfaces/tracksInterfaces'
 import TracksList from '../components/tracks/TracksList';
@@ -7,21 +7,10 @@ import TracksList from '../components/tracks/TracksList';
 type TracksResponse = ITracks[];
 
 const Tracks = () => {
-    const [tracks, setTracks] = useState<TracksResponse>([])
-    const getTracks = async () => {
-        try {
-            const data = await getTracksQuery()
-            setTracks(data)
-        } catch (error) {
-            console.error("Ошибка при получении данных о треках:", error);
-        }
-    }
-    useEffect(() => {
-        getTracks();
-    }, []);
+    const {data: tracks, isLoading, error} = useGetTracksQuery()
     return (
         <div>
-            <TracksList tracks={tracks} getTracks={getTracks}/>
+            <TracksList tracks={tracks || []}/>
         </div>
     )
 }

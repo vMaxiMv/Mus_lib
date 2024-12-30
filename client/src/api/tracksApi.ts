@@ -1,53 +1,71 @@
+import { useMutation, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
 import { ICreateUpdateTrack, ITrackDetails, ITracks } from "../interfaces/tracksInterfaces";
 import api from "./api";
 
-export const getTracksQuery = async (): Promise<ITracks[]> => {
-  try {
-    const response = await api.get<ITracks[]>("/track");
-    return response.data;
-  } catch (err) {
-    console.error("Ошибка при выполнении запроса:", err);
-    throw err; // Передаем ошибку дальше, чтобы её можно было обработать в вызывающем коде
-  }
-};
 
-export const getTracksDetailQuery = async (track_id: string): Promise<ITrackDetails> => {
-  try {
-    const response = await api.get<ITrackDetails>(`/track/${track_id}`);
-    return response.data;
-  } catch (err) {
-    console.error("Ошибка при выполнении запроса:", err);
-    throw err; // Передаем ошибку дальше, чтобы её можно было обработать в вызывающем коде
-  }
-};
+export const useGetTracksQuery = () => {
+  return useQuery<ITracks[], Error>({
+    queryKey: ["tracks"],
+    queryFn: async () => {
+      const response = await api.get<ITracks[]>("/track"); 
+      return response.data;
+    },
+  })
+}
 
-export const createTrack = async (trackData:ICreateUpdateTrack) => {
-  try {
-    const response = await api.post("/track/create", trackData);
-    return response.data;
-  } catch (err) {
-    console.error("Ошибка при добавлении трека", err);
-    throw err;
-  }
-};
-
-export const updateTrack = async (id:string, trackData:ICreateUpdateTrack) => {
-  try {
-    const response = await api.patch(`/track/update/${id}`, trackData);
-    return response.data;
-  } catch (err) {
-    console.error("Ошибка при обновлении трека", err);
-    throw err;
-  }
+export const useGetTrackDetailsQuery = (track_id: string): UseQueryResult<ITrackDetails, Error> => {
+  return useQuery<ITrackDetails, Error>({
+    queryKey: ["track", track_id],
+    queryFn: async () => {
+      const response = await api.get<ITrackDetails>(`/track/${track_id}`);
+      return response.data;
+    },
+    enabled: !!track_id, // Отключает запрос, если track_id не задан
+  });
 };
 
 
-export const deleteTrack = async (id:string) => {
-  try {
-    const response = await api.delete(`/track/delete/${id}`);
-    return response.data;
-  } catch (err) {
-    console.error("Ошибка при удалении трека", err);
-    throw err;
-  }
+export const useCreateTrackMutation = (): UseMutationResult<
+  ICreateUpdateTrack,
+  Error,
+  ICreateUpdateTrack
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (trackData: ICreateUpdateTrack) => {
+      const response = await api.post<ICreateUpdateTrack>("/track/create", trackData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tracks"] });
+    },
+  });
+};
+
+
+export const useUpdateTrackMutation = (): UseMutationResult<
+  void,
+  Error,
+  { id: string; trackData: ICreateUpdateTrack }
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, trackData }: { id: string; trackData: ICreateUpdateTrack }) => {
+      const response = await api.patch<void>(`/track/update/${id}`, trackData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["track"] });
+    },
+  });
+};
+
+
+export const useDeleteTrackMutation = (): UseMutationResult<void, Error, string> => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await api.delete<void>(`/track/delete/${id}`);
+      return response.data;
+    },
+  });
 };

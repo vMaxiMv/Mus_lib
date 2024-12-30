@@ -1,21 +1,29 @@
 import { Form, message, Modal } from "antd"
 
 import TrackForm from "./TrackForm";
-import { createTrack } from "../../api/tracksApi";
 import { IForm } from "../../interfaces/formInterface";
+import { useCreateTrackMutation } from "../../api/tracksApi";
 
 
 export const CreateTrackForm: React.FC<IForm> = ({ visible, setVisible, onCreateUpdate }) => {
     const [form] = Form.useForm();
+    const createTrackMutation = useCreateTrackMutation();
 
     const handleCreate = async () => {
         try {
             const values = await form.validateFields();
-            await createTrack(values); 
-            form.resetFields();
-            onCreateUpdate(); 
-            setVisible(false);
-            message.success('Трек успешно создан!');
+            createTrackMutation.mutate(values, {
+                onSuccess: () => {
+                    form.resetFields();
+                    onCreateUpdate(); 
+                    setVisible(false);
+                    message.success('Трек успешно создан!');
+                },
+                onError: (error) => {
+                    message.error("Ошибка при добавлении трека");
+                    console.error("Ошибка при добавлении трека:", error);
+                }
+            })
         } catch (error) {
             console.error("Ошибка при добавлении трека:", error);
         }

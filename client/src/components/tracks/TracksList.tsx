@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import css from './TracksList.module.css'
 import { ITrackDetails } from "../../interfaces/tracksInterfaces";
-import { getTracksDetailQuery } from "../../api/tracksApi";
 import { Button } from "antd";
 import { CreateTrackForm } from "../FormModals/CreateTrack";
 
@@ -14,10 +13,9 @@ interface Track {
 
 interface TracksListProps {
   tracks: Track[];
-  getTracks: () => void
 }
 
-const TracksList: React.FC<TracksListProps> = ({ tracks, getTracks }) => {
+const TracksList: React.FC<TracksListProps> = ({ tracks }) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   
@@ -28,7 +26,6 @@ const TracksList: React.FC<TracksListProps> = ({ tracks, getTracks }) => {
 
   const onCreate = () => {
     setVisible(false);
-    getTracks()
 };
 
   return (
