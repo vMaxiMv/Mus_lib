@@ -7,7 +7,7 @@ interface MusiciansListProps {
   musicians: IMusician[];
 }
 
-const MusiciansList: React.FC<MusiciansListProps> = ({ musicians }) => {
+const MusiciansList = ({ musicians }: MusiciansListProps) => {
   return (
     <div className={css.musiciansContainer}>
       <h2 className={css.musiciansTitle}>Список музыкантов</h2>

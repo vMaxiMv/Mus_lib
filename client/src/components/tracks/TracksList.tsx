@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import css from './TracksList.module.css'
-import { ITrackDetails } from "../../interfaces/tracksInterfaces";
 import { Button } from "antd";
 import { CreateTrackForm } from "../FormModals/CreateTrack";
 
@@ -15,44 +14,40 @@ interface TracksListProps {
   tracks: Track[];
 }
 
-const TracksList: React.FC<TracksListProps> = ({ tracks }) => {
-  const navigate = useNavigate();
+const TracksList = ({ tracks }:TracksListProps) => {
   const [visible, setVisible] = useState(false);
   
-
-  const handleTrackClick = (id: string) => {
-    navigate(`/tracks/${id}`);
-  };
-
-  const onCreate = () => {
-    setVisible(false);
-};
+//   const onCreate = () => {
+//     setVisible(false);
+// };
 
   return (
-    <div className={css.trackContainer}>
-      <h2 className={css.trackTitle}>Список треков</h2>
-      <div  className={css.addButton}>
-      <Button color="default" variant="solid"  onClick={() => setVisible(true)}>
-                Добавить трек
-      </Button>
-      <CreateTrackForm
-        visible={visible}
-        setVisible={setVisible}
-        onCreateUpdate={onCreate}
-      />
-      </div>
-      
-      <div className={css.tracksList}>
-        {tracks.map((track) => (
-          <div
-            key={track.track_id}
-            className={css.trackItem}
-            onClick={() => handleTrackClick(track.track_id)}
-          >
-            <span className={css.trackListName}>{track.title}</span>
-            <span className={css.trackDuration}>{track.duration}</span>
-          </div>
-        ))}
+    <div style={{width:'90%', margin: '0 auto'}}>
+      <div className={css.trackContainer}>
+        <h2 className={css.trackTitle}>Список треков</h2>
+        <div  className={css.addButton}>
+        <Button color="default" variant="solid"  onClick={() => setVisible(true)}>
+                  Добавить трек
+        </Button>
+        <CreateTrackForm
+          visible={visible}
+          setVisible={setVisible}
+          
+        />
+        </div>
+
+        <div className={css.tracksList}>
+          {tracks.map((track) => (
+            <Link
+              to={`/tracks/${track.track_id}`}
+              key={track.track_id}
+              className={css.trackItem}
+            >
+              <span className={css.trackListName}>{track.title}</span>
+              <span className={css.trackDuration}>{track.duration}</span>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

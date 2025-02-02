@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { IMusician } from '../interfaces/musicianInterfaces'
-import { getMusiciansQuery } from '../api/musicianApi'
 import MusiciansList from '../components/musicians/MusiciansList'
+import { useGetMusiciansQuery } from '../api/musicianApi'
 
 const Musicians = () => {
-    const [musicians, setMusicians] = useState<IMusician[]>([])
-    const getTracks = async () => {
-        try {
-            const data = await getMusiciansQuery()
-            setMusicians(data)
-        } catch (error) {
-            console.error("Ошибка при получении данных о треках:", error);
-        }
-    }
-    useEffect(() => {
-        getTracks();
-    }, []);
+   const {data: musicians} = useGetMusiciansQuery()
     return (
         <div>
-            <MusiciansList musicians={musicians}/>
+        {musicians && <MusiciansList musicians={musicians}/>}
         </div>
     )
 }

@@ -15,8 +15,8 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Layout >
-        <HeaderComponent />
-        <AppRouter/>
+          <HeaderComponent />
+          <AppRouter/>
         </Layout>
       </Router>
     </QueryClientProvider>

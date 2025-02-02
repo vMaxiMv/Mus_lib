@@ -4,7 +4,7 @@ import { UploadOutlined } from "@ant-design/icons";
 
 
 
-export const PlaylistForm: React.FC<TrackFormProps> = ({form }) => {
+export const PlaylistForm = ({ form }: TrackFormProps) => {
    
     const handleFileChange = (info: any) => {
         if (info.file.status === "done" || info.file.originFileObj) {

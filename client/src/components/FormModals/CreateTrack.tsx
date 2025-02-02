@@ -5,7 +5,7 @@ import { IForm } from "../../interfaces/formInterface";
 import { useCreateTrackMutation } from "../../api/tracksApi";
 
 
-export const CreateTrackForm: React.FC<IForm> = ({ visible, setVisible, onCreateUpdate }) => {
+export const CreateTrackForm = ({ visible, setVisible }: IForm) => {
     const [form] = Form.useForm();
     const createTrackMutation = useCreateTrackMutation();
 
@@ -15,7 +15,6 @@ export const CreateTrackForm: React.FC<IForm> = ({ visible, setVisible, onCreate
             createTrackMutation.mutate(values, {
                 onSuccess: () => {
                     form.resetFields();
-                    onCreateUpdate(); 
                     setVisible(false);
                     message.success('Трек успешно создан!');
                 },

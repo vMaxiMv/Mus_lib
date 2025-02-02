@@ -1,13 +1,12 @@
 import { Form, message, Modal } from "antd"
-import TrackForm from "./TrackForm";
 import { IForm } from "../../interfaces/formInterface";
-import { createPlaylist } from "../../api/playlistApi";
-import { IPlayListDetail } from "../../interfaces/playlistInterface";
+import { useCreatePlaylistMutation } from "../../api/playlistApi";
 import { PlaylistForm } from "./PlaylistForm";
 
 
-export const CreatePlaylistForm: React.FC<IForm> = ({ visible, setVisible, onCreateUpdate }) => {
+export const CreatePlaylistForm = ({ visible, setVisible}: IForm) => {
     const [form] = Form.useForm();
+    const createPlaylistMutation = useCreatePlaylistMutation()
 
     const handleCreate = async () => {
         try {
@@ -23,11 +22,21 @@ export const CreatePlaylistForm: React.FC<IForm> = ({ visible, setVisible, onCre
             } else {
                 throw new Error("Файл обложки не найден!");
             }
-            await createPlaylist(formData); 
-            form.resetFields();
-            onCreateUpdate(); 
-            setVisible(false);
-            message.success('Плейлист успешно создан!');
+
+            
+            createPlaylistMutation.mutate(formData, {
+                onSuccess: () => {
+                    form.resetFields();
+                    setVisible(false);
+                    message.success('Плейлист успешно создан!');
+                },
+                onError: (error) => {
+                    message.error("Ошибка при добавлении плейлиста");
+                    console.error("Ошибка при добавлении плейлиста:", error);
+                }
+            })
+            
+            
         } catch (error) {
             console.error("Ошибка при создании плейлиста:", error);
         }

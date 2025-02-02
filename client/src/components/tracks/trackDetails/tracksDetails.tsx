@@ -47,9 +47,6 @@ const TracksDetails = () => {
         const handleCancel = () => {
             setIsModalVisible(false);
         };
-        const onUpdate = () => {
-            setVisible(false);
-        };
     
     return (
         <div className={css.cardContainer}>
@@ -65,7 +62,6 @@ const TracksDetails = () => {
                         visible={visible}
                         setVisible={setVisible}
                         track={trackInfo}
-                        onCreateUpdate={onUpdate}
                       />
             <div className={css.cardSection}>
                 <p className={css.cardText}><b>Длительность:</b> {trackInfo.duration}</p>

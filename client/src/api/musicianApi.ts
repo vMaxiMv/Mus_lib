@@ -1,12 +1,14 @@
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { IMusician } from "../interfaces/musicianInterfaces";
 import api from "./api";
 
-export const getMusiciansQuery = async (): Promise<IMusician[]> => {
-    try {
-      const response = await api.get<IMusician[]>("/musicians");
-      return response.data;
-    } catch (err) {
-      console.error("Ошибка при выполнении запроса:", err);
-      throw err; 
+
+export const useGetMusiciansQuery = (): UseQueryResult<IMusician[], Error> => {
+  return useQuery({
+    queryKey: ["musicians"],
+    queryFn: async () => {
+     const response = await api.get('/musicians')
+     return response.data
     }
-  };
+  })
+}

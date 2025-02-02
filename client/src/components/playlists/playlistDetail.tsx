@@ -1,49 +1,40 @@
-import { Button, Card, Col, Image, message, Modal, Row, Spin } from "antd"
-import { IPlayList, IPlayListDetail } from "../../interfaces/playlistInterface"
+import { Button, Image, message, Modal, Spin } from "antd"
 import css from './playlistsCollection.module.css'
 import { useNavigate, useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { deletePlaylist, getPlaylistsDetailQuery } from "../../api/playlistApi"
+import { useState } from "react"
+import { useDeletePlaylistMutation, useGetPlaylistsDetailQuery} from "../../api/playlistApi"
 
 
 
-const PlaylistsDetail: React.FC = () => {
-    const { id} = useParams<{id:string}>()
+const PlaylistsDetail = () => {
+    const { id } = useParams<{id: string}>()
     const navigate = useNavigate();
-    const [playlistInfo, setPlaylistInfo] = useState<IPlayListDetail>()
+    const deletePlaylistMutation = useDeletePlaylistMutation()
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const getPlaylistDetail = async () => {
-        if (!id) {
-            console.error("ID трека не указан в URL");
-            return;
-        }
-          try {
-              const data = await getPlaylistsDetailQuery(id)
-              setPlaylistInfo(data)
-          } catch (error) {
-              console.error("Ошибка при получении данных о треках:", error);
-          }
-      }
+    const {data: playlistInfo, isLoading} = useGetPlaylistsDetailQuery(id || '')
+    if (isLoading || !playlistInfo){
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <Spin />
+        </div>
+      );
+    }
+    
 
       const handleDelete = async () => {
         if (!id) return;
-        try {
-          await deletePlaylist(id)
-          message.success('Плейлист успшено удален!')
-          setIsModalVisible(false);
-          navigate('/playlists');
-        } catch (error) {
-          message.error('Ошибка при удалении плейлиста')
-          console.error('Ошибка при удалении плейлиста', error)
-        }
+        deletePlaylistMutation.mutate(id, {
+          onSuccess: () => {
+            message.success('Плейлист успшено удален!')
+            setIsModalVisible(false);
+            navigate('/playlists');
+          },
+          onError: (error) => {
+            message.error('Ошибка при удалении плейлиста')
+            console.error('Ошибка при удалении плейлиста', error)
+          }
+        })
       }
-
-    useEffect(() => {
-        getPlaylistDetail()
-      }, [id]);
-      if (!playlistInfo) {
-        return <div style={{display:'flex', justifyContent:'center', alignItems:'center', height: '100vh'}}><Spin/></div>;
-    }
 
     const showModal = () => {
       setIsModalVisible(true);

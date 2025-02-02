@@ -20,7 +20,6 @@ export interface IMusician {
   country: string;
 }
 
-// Интерфейс для альбома
 export interface IAlbum {
   album_id: string;
   title: string;
@@ -28,7 +27,6 @@ export interface IAlbum {
   cover_image_url: string;
 }
 
-// Интерфейс для жанра
 export interface IGenre {
   genre_id: string;
   genre_name: string;
@@ -38,6 +36,7 @@ export interface ICreateUpdateTrack{
   title: string;
   duration: string;
   musician_id: string;
+  genres: IGenre[]
 }
 
 export interface ITrackPlaylist{

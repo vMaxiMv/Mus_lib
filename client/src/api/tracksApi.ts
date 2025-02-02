@@ -3,21 +3,21 @@ import { ICreateUpdateTrack, ITrackDetails, ITracks } from "../interfaces/tracks
 import api from "./api";
 
 
-export const useGetTracksQuery = () => {
-  return useQuery<ITracks[], Error>({
+export const useGetTracksQuery = (): UseQueryResult<ITracks[], Error> => {
+  return useQuery({
     queryKey: ["tracks"],
     queryFn: async () => {
-      const response = await api.get<ITracks[]>("/track"); 
+      const response = await api.get("/track"); 
       return response.data;
     },
   })
 }
 
 export const useGetTrackDetailsQuery = (track_id: string): UseQueryResult<ITrackDetails, Error> => {
-  return useQuery<ITrackDetails, Error>({
+  return useQuery({
     queryKey: ["track", track_id],
     queryFn: async () => {
-      const response = await api.get<ITrackDetails>(`/track/${track_id}`);
+      const response = await api.get(`/track/${track_id}`);
       return response.data;
     },
     enabled: !!track_id, // Отключает запрос, если track_id не задан
@@ -32,8 +32,8 @@ export const useCreateTrackMutation = (): UseMutationResult<
 > => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (trackData: ICreateUpdateTrack) => {
-      const response = await api.post<ICreateUpdateTrack>("/track/create", trackData);
+    mutationFn: async (trackData) => {
+      const response = await api.post("/track/create", trackData);
       return response.data;
     },
     onSuccess: () => {
@@ -44,14 +44,14 @@ export const useCreateTrackMutation = (): UseMutationResult<
 
 
 export const useUpdateTrackMutation = (): UseMutationResult<
-  void,
+  ITracks,
   Error,
   { id: string; trackData: ICreateUpdateTrack }
 > => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, trackData }: { id: string; trackData: ICreateUpdateTrack }) => {
-      const response = await api.patch<void>(`/track/update/${id}`, trackData);
+    mutationFn: async ({ id, trackData }) => {
+      const response = await api.patch(`/track/update/${id}`, trackData);
       return response.data;
     },
     onSuccess: () => {
@@ -62,9 +62,9 @@ export const useUpdateTrackMutation = (): UseMutationResult<
 
 
 export const useDeleteTrackMutation = (): UseMutationResult<void, Error, string> => {
-  return useMutation({
+  return useMutation ({
     mutationFn: async (id: string) => {
-      const response = await api.delete<void>(`/track/delete/${id}`);
+      const response = await api.delete(`/track/delete/${id}`);
       return response.data;
     },
   });

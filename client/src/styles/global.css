@@ -1,13 +1,32 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 .full-width-header {
-    width: 100vw; /* Ширина на всю ширину окна */
+    width: 100%;
     position: relative;
     left: 50%;
     right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    background-color: #f0f2f5; /* Цвет фона */
-    color: #000000; /* Цвет текста */
-    padding: 0 20px; /* Отступы */
-    border-bottom: 1px solid #e8e8e8; /* Граница снизу */
+    margin-left: -50%;
+    margin-right: -50%;
+    background-color: #f0f2f5; 
+    color: #000000; 
+    padding: 0 20px; 
+    border-bottom: 1px solid #e8e8e8; 
     align-items: center;
   }
+
+.header-logo {
+  height: 60px; 
+  margin: 30px 36px 0 36px;
+  transition: height 0.3s ease; 
+}
+
+@media (max-width: 768px) {
+  .header-logo {
+    margin-top: 2%;
+    height: 50px; 
+    margin: 25px 18px 0 8px;
+  }
+}

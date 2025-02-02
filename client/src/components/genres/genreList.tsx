@@ -1,4 +1,3 @@
-import React from "react";
 import { IGenre } from "../../interfaces/tracksInterfaces";
 import css from './genreList.module.css'
 
@@ -6,7 +5,7 @@ interface GenresListProps {
   genres: IGenre[];
 }
 
-const GenresList: React.FC<GenresListProps> = ({ genres }) => {
+const GenresList = ({ genres }: GenresListProps) => {
     const colors = ["#3be477", "#ff6b6b", "#6b6bff", "#ffd166", "#66ffd1", "#ff95ca", "#a685e2", "#ffcc00"];
   return (
     <div className={css.genreContainer}>

@@ -1,12 +1,13 @@
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { IGenre } from "../interfaces/tracksInterfaces";
 import api from "./api";
 
-export const getGenresQuery = async (): Promise<IGenre[]> => {
-    try {
-      const response = await api.get<IGenre[]>("/genres");
-      return response.data;
-    } catch (err) {
-      console.error("Ошибка при выполнении запроса:", err);
-      throw err; 
-    }
-  };
+  export const useGetGenresQuery = (): UseQueryResult<IGenre[], Error> => {
+    return useQuery({
+      queryKey: ["genres"],
+      queryFn: async () => {
+        const response = await api.get("/genres")
+        return response.data
+      }
+    })
+  }

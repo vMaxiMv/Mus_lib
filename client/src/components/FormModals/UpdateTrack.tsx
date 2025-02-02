@@ -6,16 +6,17 @@ import { useEffect } from "react";
 import { IForm } from "../../interfaces/formInterface";
 import { useUpdateTrackMutation } from "../../api/tracksApi";
 
+
+
 interface CreateTrackFormProps extends IForm {
     track: ITrackDetails; 
   }
 
-export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({ 
+export const UpdateTrackForm = ({ 
     visible, 
     setVisible, 
     track, 
-    onCreateUpdate 
-}) => {
+}: CreateTrackFormProps) => {
     const [form] = Form.useForm();
     const updateTrackMutation = useUpdateTrackMutation();
 
@@ -37,7 +38,6 @@ export const UpdateTrackForm: React.FC<CreateTrackFormProps> = ({
                 {
                     onSuccess: () => {
                         form.resetFields();
-                        onCreateUpdate(); 
                         setVisible(false);
                         message.success('Трек успешно обновлен!');
                     },
