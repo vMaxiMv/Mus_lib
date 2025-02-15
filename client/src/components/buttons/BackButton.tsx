@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-
+import '../../styles/global.css'
 
 
 const BackButton = () => {
@@ -10,7 +10,7 @@ const BackButton = () => {
   }
     return (
         <div>
-            <a style={{color:'white'}} onClick={()=>handleGoBack()}>Назад</a>
+            <button className='back_button' onClick={()=>handleGoBack()}>Назад</button>
         </div>
     )
 }

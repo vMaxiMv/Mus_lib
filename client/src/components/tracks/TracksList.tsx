@@ -3,24 +3,16 @@ import { Link } from "react-router-dom";
 import css from './TracksList.module.css'
 import { Button } from "antd";
 import { CreateTrackForm } from "../FormModals/CreateTrack";
+import { ITrackPlaylist } from "../../interfaces/tracksInterfaces";
 
-interface Track {
-  track_id: string;
-  title: string;
-  duration: string;
-}
 
 interface TracksListProps {
-  tracks: Track[];
+  tracks: ITrackPlaylist[];
 }
 
 const TracksList = ({ tracks }:TracksListProps) => {
   const [visible, setVisible] = useState(false);
   
-//   const onCreate = () => {
-//     setVisible(false);
-// };
-
   return (
     <div style={{width:'90%', margin: '0 auto'}}>
       <div className={css.trackContainer}>

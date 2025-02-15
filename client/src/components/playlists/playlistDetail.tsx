@@ -1,4 +1,4 @@
-import { Button, Image, message, Modal, Spin } from "antd"
+import { Button, message, Modal, Spin } from "antd"
 import css from './playlistsCollection.module.css'
 import { useNavigate, useParams } from "react-router-dom"
 import { useState } from "react"
@@ -12,6 +12,7 @@ const PlaylistsDetail = () => {
     const deletePlaylistMutation = useDeletePlaylistMutation()
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {data: playlistInfo, isLoading} = useGetPlaylistsDetailQuery(id || '')
+
     if (isLoading || !playlistInfo){
       return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -72,7 +73,7 @@ const PlaylistsDetail = () => {
         <div className={css.playlistTracks}>
           <h3 className={css.tracksTitle}>Треки</h3>
           <ul className={css.tracksList}>
-            {playlistInfo.tracks.map((track:any) => (
+            {playlistInfo.tracks.map((track) => (
               <li key={track.track_id} className={css.trackItem}>
                 <span className={css.trackTitle}>{track.title}</span>
                 <span className={css.trackDuration}>{track.duration}</span>
